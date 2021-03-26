@@ -7,7 +7,38 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html {
+    font-size: 12px;
+}
+
+button {
+    font-size: 1rem;
+    /* border: 1px solid lightgrey; */
+    outline: none;
+}
+
+.jobs-container {
+    border-bottom: 1px solid lightgrey;
+    padding: 1rem;
+    background: #fdfdfd;
+}
+
+.jobs {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.job {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width: 300px;
+    border: 1px solid lightgrey;
+    position: relative;
+}
+
+.job button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
 }
