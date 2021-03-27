@@ -7,38 +7,184 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+    --blue: #4fccf4;
+    --green: #169750;
+    --yellow: #ffd834;
+    --purple: #c328df;
+    --red: #df2d28;
+}
+
+* {
+    color: #333333;
+}
+
 html {
     font-size: 12px;
 }
 
+a {
+    cursor: pointer;
+    color: blue;
+}
+
+h2 {
+    margin: 0 0.5rem 0.5rem;
+    /* text-transform: uppercase; */
+    font-weight: 600;
+}
+
+input {
+    margin: 0.5rem;
+}
+
+/* Buttons */
 button {
-    font-size: 1rem;
-    /* border: 1px solid lightgrey; */
-    outline: none;
+    border-radius: 0.3rem;
+    border: none;
+    padding: 0.3rem 0.56rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0.5rem;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button.delete {
+    background: var(--red);
+    color: white;
+}
+
+button.yellow {
+    background: var(--yellow);
+}
+button.green {
+    color: white;
+    background: var(--green);
+}
+button.blue {
+    background: var(--blue);
+}
+button.purple {
+    color: white;
+    background: var(--purple);
+}
+button.add {
+    font-size: 1.2rem;
+    padding: 0.5rem 1.5rem;
+    margin: 0.5rem 0;
+}
+button.hollow {
+    background: none;
+    border: 0.5px solid lightgrey;
+}
+.create-job .hollow {
+    border: 1px solid var(--yellow);
+}
+
+/**/
+
+.container {
+    border-radius: 0.5rem;
+    background: #fdfdfd;
+    padding: 1rem;
+    margin: 1rem;
+    border: 0.5px solid lightgrey;
+    position: relative;
 }
 
 .jobs-container {
-    border-bottom: 1px solid lightgrey;
-    padding: 1rem;
-    background: #fdfdfd;
+    border-left: 6px solid var(--blue);
+}
+.candidates-container {
+    border-left: 6px solid var(--green);
+}
+.tags-container {
+    border-left: 6px solid var(--yellow);
+}
+.emails-container {
+    border-left: 6px solid var(--purple);
 }
 
-.jobs {
+/* Jobs and Candidates */
+
+.jobs, .candidates {
     display: flex;
     flex-wrap: wrap;
 }
 
-.job {
+.job, .candidate {
     background: #ffffff;
     padding: 1rem;
+    margin: 0.5rem;
     border-radius: 0.5rem;
     width: 300px;
     border: 1px solid lightgrey;
     position: relative;
 }
 
-.job button {
+.job span, .candidate span {
+    background: var(--yellow);
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.8rem;
+    margin: 0 0.2rem;
+}
+
+.job button, .candidate button {
     position: absolute;
     right: 1rem;
     top: 1rem;
+}
+
+.create-job, .create-candidate {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.add-job, .add-candidate {
+    font-size: 1.5rem;
+    padding-right: 0.5rem;
+    border-radius: 1rem;
+    color: grey;
+    text-align: center;
+    cursor: pointer;
+    margin: 1rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+/**/
+
+/* Tags */
+.tags {
+    display: flex;
+}
+.tag {
+    margin: 0.2rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.3rem;
+    border: 1px solid lightgrey;
+    text-align: center;
+    background: #ffffff;
+    color: grey;
+}
+
+/**/
+
+/* Email */
+.email-groups {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.email-group {
+    border: 1px solid lightgrey;
+    padding: 0.5rem;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
 }

@@ -1,19 +1,41 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import {
+    updateJobs
+} from '../store/actions.js'
+
 
 const Jobs = () => {
-    const [jobs, setJobs] = useState([])
+    const [addNewJob, setAddNewJob] = useState(false)
     const [jobTags, setJobTags] = useState([])
-
-    const [tags, setTags] = useState(['Frontend', 'Backend', 'Fullstack', 'Javascript', 'Python', 'PHP', 'all'])
-
     const [title, setTitle] = useState('')
     const [company, setCompany] = useState('')
     const [description, setDescription] = useState('')
     const [date, setDate] = useState('')
     const [link, setLink] = useState('')
+    const [noOfTags, setNoOfTags] = useState(0)
+
+    const jobs = useSelector(state => state.app.jobs)
+    const tags = useSelector(state => state.app.tags)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (tags.length < noOfTags) maintainTags()
+        setNoOfTags(tags.length)
+    }, [tags])
+
+    const maintainTags = () => {
+        const jobsCopy = [...jobs]
+        for (const job of jobs) {
+            const removedTag = job.jobTags.filter((tag, i) => !tags.includes(tag))
+            if (removedTag.length) job.jobTags.splice(job.jobTags.indexOf(removedTag), 1)
+        }
+        dispatch(updateJobs(jobsCopy))
+    }
 
     const addJob = () => {
-        if (!title || !company || !description || !date || !link || !jobTags.length) return
+        if (!title || !company || !jobTags.length) return
         let newJobs = [...jobs]
         newJobs.push({
             title,
@@ -23,22 +45,24 @@ const Jobs = () => {
             jobTags,
             link
         })
-        setJobs(newJobs)
+        dispatch(updateJobs(newJobs))
+
         setTitle('')
         setCompany('')
         setDescription('')
         setDate('')
         setLink('')
         setJobTags([])
+        setAddNewJob(false)
     }
 
     const deleteJob = (id) => {
         let newJobs = [...jobs]
         newJobs.splice(id, 1)
-        setJobs(newJobs)
+        dispatch(updateJobs(newJobs))
     }
 
-    const handelJobTag = (tag) => {
+    const handelTag = (tag) => {
         let newTags = [...jobTags]
         if (newTags.includes(tag)) {
             newTags = newTags.filter((x) => x !== tag)
@@ -50,41 +74,43 @@ const Jobs = () => {
     }
 
     return (
-        <div className="jobs-container">
+        <div className="container jobs-container">
             <h2>Jobs</h2>
-            <div className="create-job">
-                Title <input onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
-                Company <input onChange={(e) => setCompany(e.target.value)} type="text" value={company} />
-                Description <input onChange={(e) => setDescription(e.target.value)} type="text" value={description} />
-                Date <input onChange={(e) => setDate(e.target.value)} type="date" value={date} />
-                Link <input onChange={(e) => setLink(e.target.value)} type="text" value={link} />
+            {addNewJob ?
+                <div className="create-job">
+                    <div>New Job</div>
+                    Title <input onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
+                    Company <input onChange={(e) => setCompany(e.target.value)} type="text" value={company} />
+                    Description <input onChange={(e) => setDescription(e.target.value)} type="text" value={description} />
+                    Date <input onChange={(e) => setDate(e.target.value)} type="date" value={date} />
+                    Link <input onChange={(e) => setLink(e.target.value)} type="text" value={link} />
 
-                {jobTags.map((tag, i) =>
-                    <div key={i}>{tag}</div>
-                )}
-
-                {tags.map((tag, i) =>
-                    <button onClick={() => handelJobTag(tag)} style={jobTags.includes(tag) ? {border: '2px solid lightgreen'} : {}} key={i}>{tag}</button>
-                )}
-            </div>
-
-            <button onClick={() => addJob()}>Add</button>
+                    <div>Tags
+                        {tags.map((tag, i) =>
+                            <button onClick={() => handelTag(tag)} className={jobTags.includes(tag) ? 'yellow' : 'hollow'} key={i}>{tag}</button>
+                        )}
+                    </div>
+                    <button className="blue add" onClick={() => addJob()}>Add +</button>
+                </div>
+            :
+                <div onClick={() => setAddNewJob(true)} className="add-job">Add New Job +</div>
+            }
 
             <div className="jobs">
                 {jobs.map((job, i) =>
                     <div key={i} className="job">
-                        <div>Job: {i}</div>
+                        <div><b>Company:</b> {job.company}</div>
+                        <div>Id: {i}</div>
                         <div>Title: {job.title}</div>
-                        <div>Company: {job.company}</div>
-                        <div>Description: {job.description}</div>
                         <div>Date: {job.date}</div>
-                        <div>
+                        <div>Description: {job.description}</div>
+                        <div>Tags:
                             {job.jobTags.map((tag, i) =>
-                                <div key={i}>{tag}</div>
+                                <span key={i}>{tag}</span>
                             )}
                         </div>
                         <a href={job.link} target="_blank">{job.link}</a>
-                        <button onClick={() => deleteJob(i)}>Delete</button>
+                        <button className="delete" onClick={() => deleteJob(i)}>X</button>
                     </div>
                 )}
             </div>

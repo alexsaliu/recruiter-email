@@ -1,0 +1,3 @@
+export const UPDATE_JOBS = "UPDATE_JOBS"
+export const UPDATE_TAGS = "UPDATE_TAGS"
+export const UPDATE_CANDIDATES = "UPDATE_CANDIDATES"
