@@ -19,8 +19,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "npm run build && firebase deploy",
-    "autocommit": "git add . && git commit -m 'auto commited' && git push",
-    "commitdeploy": "npm run autocommit && npm run deploy"
+    "autocommit": "git add . && git commit -m \"auto committed\" && git push",
+    "commitanddeploy": "npm run autocommit && npm run deploy"
   },
   "eslintConfig": {
     "extends": [
