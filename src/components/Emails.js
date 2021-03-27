@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { generateEmailHtml } from '../emailGenerator.js'
 
 const Emails = () => {
     const [groups, setGroups] = useState([])
     const [email, setEmail] = useState('')
-    const [selectedGroupId, setSelectedGroupId] = useState(-1)
+    const [selectedGroupId, setSelectedGroupId] = useState(-2)
+
+    const emailRef = useRef(null)
 
     const jobs = useSelector(state => state.app.jobs)
     const candidates = useSelector(state => state.app.candidates)
@@ -39,40 +43,45 @@ const Emails = () => {
         }
 
         setGroups(jobGroups)
+        setSelectedGroupId(-2)
+        setEmail('')
     }
 
     const generateEmail = (i) => {
-        let html = ''
-        for (const id in groups[i].jobIds) {
-            html += jobs[id].company + '\n'
-            html += jobs[id].title + '\n'
-        }
-        setEmail(html)
+        const emailJobs = groups[i].jobIds.map(id => jobs[id])
+        setEmail(generateEmailHtml(emailJobs))
         setSelectedGroupId(i)
     }
 
     const allEmail = () => {
-        let html = ''
-        for (const job of jobs) {
-            html += job.company + '\n'
-            html += job.title + '\n'
-        }
-        setEmail(html)
+        setEmail(generateEmailHtml(jobs))
         setSelectedGroupId(-1)
+    }
+
+    const copyEmail = (e) => {
+        let str = email
+        function listener(e) {
+          e.clipboardData.setData("text/html", str)
+          e.clipboardData.setData("text/plain", str)
+          e.preventDefault()
+        }
+        document.addEventListener("copy", listener);
+        document.execCommand("copy");
+        document.removeEventListener("copy", listener);
     }
 
     return (
         <div className="container emails-container">
             <h2>Emails</h2>
-            <button className="add purple" onClick={() => generateEmails()}>Generate Emails</button>
+            <button className="add purple" onClick={() => generateEmails()}>Generate Email Groups</button>
             <div className="email-groups">
-                {candidates.length ? <div style={selectedGroupId === -1 ? {border: '2px solid var(--purple)'} : {}} onClick={() => allEmail(-1)} className="email-group">All</div> : ''}
+                {candidates.length ? <button style={selectedGroupId === -1 ? {border: '2px solid var(--purple)'} : {}} onClick={() => allEmail(-1)} className="email-group hollow">All</button> : ''}
                 {groups.map((group, i) =>
-                    <div onClick={() => generateEmail(i)} className="email-group" key={i}>
+                    <button onClick={() => generateEmail(i)} className="email-group hollow" key={i} style={selectedGroupId === i ? {border: '2px solid var(--purple)'} : {}}>
                         {group.candidateIds.map((candidate, j) =>
                             <div key={j}>{candidates[candidate].name}</div>
                         )}
-                    </div>
+                    </button>
                 )}
             </div>
             {selectedGroupId >= 0 ?
@@ -83,12 +92,13 @@ const Emails = () => {
                 </div>
             :
                 <div className="email-list">
-                    {candidates.map((candidate, i) =>
+                    {selectedGroupId > -2 ? candidates.map((candidate, i) =>
                         <div key={i}>{candidate.email}</div>
-                    )}
+                    ) : ''}
                 </div>
             }
-            <div className="email">{email}</div>
+            {email ? <div ref={emailRef} className="email" dangerouslySetInnerHTML={{__html: email}}></div> : ''}
+            <button className="add purple" onClick={(e) => copyEmail(e)}>Copy Email</button>
         </div>
     )
 }

@@ -104,6 +104,7 @@ const Jobs = () => {
                         <div>Title: {job.title}</div>
                         <div>Date: {job.date}</div>
                         <div>Description: {job.description}</div>
+                        <div>Link: {job.link}</div>
                         <div>Tags:
                             {job.jobTags.map((tag, i) =>
                                 <span key={i}>{tag}</span>

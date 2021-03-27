@@ -104,6 +104,7 @@ const Candidates = () => {
                         <div>Email: {candidate.email}</div>
                         <div>Phone: {candidate.phone}</div>
                         <div>Notes: {candidate.notes}</div>
+                        <div>Link: {candidate.link}</div>
                         <div>Tags:
                             {candidate.candidateTags.map((tag, i) =>
                                 <span key={i}>{tag}</span>
